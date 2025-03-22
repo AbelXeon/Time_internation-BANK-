@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time International Bank - Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Embedded CSS */
+    body {
+      font-family: 'Lato', sans-serif;
+      background-color: #1e1e2f; /* Dark blue background */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff; /* White text */
+    }
+
+    .container {
+      background-color: #2a2a40; /* Slightly lighter blue for the container */
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 80%; /* 80% width */
+      max-width: 800px; /* Maximum width */
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: #00d1b2; /* Teal color for the heading */
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Two columns */
+      gap: 20px; /* Space between columns */
+      text-align: left; /* Align text to the left */
+    }
+
+    .left-column, .right-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 8px; /* Space between label and input */
+      font-weight: bold;
+      color: #00d1b2; /* Teal color for labels */
+    }
+
+    input, select, textarea {
+      width: 85%;
+      padding: 10px;
+      margin-bottom: 20px; /* Increased space between inputs */
+      border: 1px solid #444;
+      border-radius: 5px;
+      background-color: #3a3a4f; /* Dark input background */
+      color: #fff; /* White text for inputs */
+      font-size: 14px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #00d1b2; /* Teal border on focus */
+      outline: none;
+    }
+
+    button {
+      width: 50%;
+      padding: 12px;
+      background-color: #00d1b2; /* Teal button */
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #00b89c; /* Darker teal on hover */
+    }
+
+    textarea {
+      resize: vertical; /* Allow vertical resizing */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Create Account</h1>
+    <form id="createAccountForm">
+      <div class="form-grid">
+        <!-- Left Column -->
+        <div class="left-column">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" name="phone" required>
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" name="dob" required>
+
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+
+          <label for="address">Address:</label>
+          <textarea id="address" name="address" rows="3" required></textarea>
+        </div>
+      </div>
+
+      <button type="submit">Create Account</button>
+    </form>
+  </div>
+
+  <script>
+    // Embedded JavaScript
+    document.getElementById('createAccountForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Get form values
+      const name = document.getElementById('name').value;
+      const dob = document.getElementById('dob').value;
+      const phone = document.getElementById('phone').value;
+      const gender = document.getElementById('gender').value;
+      const email = document.getElementById('email').value;
+      const address = document.getElementById('address').value;
+
+      // Validate inputs (you can add more validation logic)
+      if (!name || !dob || !phone || !gender || !email || !address) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      // Simulate account creation (you can replace this with an API call)
+      alert('Account created successfully!');
+      console.log({ name, dob, phone, gender, email, address });
+
+      // Clear the form
+      document.getElementById('createAccountForm').reset();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deposit - Time International Bank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Embedded CSS */
+    body {
+      font-family: 'Lato', sans-serif;
+      background-color: #1e1e2f; /* Dark blue background */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff; /* White text */
+    }
+
+    .container {
+      background-color: #2a2a40; /* Slightly lighter blue for the container */
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 350px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #00d1b2; /* Teal color for the heading */
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #00d1b2; /* Teal color for labels */
+    }
+
+    input {
+      width: 85%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      background-color: #3a3a4f; /* Dark input background */
+      color: #fff; /* White text for inputs */
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #00d1b2; /* Teal border on focus */
+      outline: none;
+    }
+
+    button {
+      width: 50%;
+      padding: 12px;
+      background-color: #00d1b2; /* Teal button */
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00b89c; /* Darker teal on hover */
+      transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+    button:active {
+      transform: scale(0.95); /* Slight shrink effect on click */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Time International Bank</h1>
+    <form id="depositForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="accountNo">Account No:</label>
+      <input type="text" id="accountNo" name="accountNo" required>
+
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <script>
+    // Embedded JavaScript
+    document.getElementById('depositForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Get form values
+      const name = document.getElementById('name').value;
+      const accountNo = document.getElementById('accountNo').value;
+
+      // Validate inputs
+      if (!name || !accountNo) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      // Simulate search (you can replace this with an API call)
+      alert(`Searching for account: ${name}, ${accountNo}`);
+      console.log(`Name: ${name}, Account No: ${accountNo}`);
+
+      // Clear the form
+      document.getElementById('depositForm').reset();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiring Employee - Time International Bank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Embedded CSS */
+    body {
+      font-family: 'Lato', sans-serif;
+      background-color: #1e1e2f; /* Dark blue background */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff; /* White text */
+    }
+
+    .container {
+      background-color: #2a2a40; /* Slightly lighter blue for the container */
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 700px; /* Wider container */
+      text-align: center;
+      animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #00d1b2; /* Teal color for the heading */
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #fff; /* White color for the subheading */
+    }
+
+    .form-grid {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .left-side, .right-side {
+      width: 48%; /* Slightly less than half to account for spacing */
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #00d1b2; /* Teal color for labels */
+    }
+
+    input, select {
+      width: 85%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #444;
+      border-radius: 10px;
+      background-color: #3a3a4f; /* Dark input background */
+      color: #fff; /* White text for inputs */
+      font-size: 14px;
+    }
+
+    input:focus, select:focus {
+      border-color: #00d1b2; /* Teal border on focus */
+      outline: none;
+    }
+
+    button {
+      width: 50%;
+      padding: 12px;
+      background-color: #00d1b2; /* Teal button */
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00b89c; /* Darker teal on hover */
+      transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+    button:active {
+      transform: scale(0.95); /* Slight shrink effect on click */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Time International Bank</h1>
+    <h2>Hiring Employee</h2>
+
+    <!-- Hiring Form -->
+    <form id="hiringForm">
+      <div class="form-grid">
+        <!-- Left Side -->
+        <div class="left-side">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" name="phone" required>
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+
+          <label for="salary">Salary:</label>
+          <input type="number" id="salary" name="salary" readonly> <!-- Read-only field -->
+        </div>
+
+        <!-- Right Side -->
+        <div class="right-side">
+          <label for="role">Role:</label>
+          <select id="role" name="role" required>
+            <option value="">Select Role</option>
+            <option value="15000">Accountant</option>
+            <option value="30000">Manager</option>
+            <option value="5000">Security</option>
+            <option value="5000">Cleaner</option>
+            <option value="10000">Finance</option>
+          </select>
+
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" name="dob" required>
+
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit">Hire Employee</button>
+    </form>
+  </div>
+
+  <script>
+    // Embedded JavaScript
+    const roleSelect = document.getElementById('role');
+    const salaryInput = document.getElementById('salary');
+
+    // Automatically fill salary based on selected role
+    roleSelect.addEventListener('change', function() {
+      const selectedRole = roleSelect.value;
+      salaryInput.value = selectedRole;
+    });
+
+    // Handle form submission
+    document.getElementById('hiringForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Get form values
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
+      const salary = document.getElementById('salary').value;
+      const role = roleSelect.options[roleSelect.selectedIndex].text;
+      const dob = document.getElementById('dob').value;
+      const gender = document.getElementById('gender').value;
+
+      // Validate inputs
+      if (!name || !phone || !email || !salary || !role || !dob || !gender) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      // Simulate hiring (you can replace this with an API call)
+      alert(`Hiring ${name} as ${role} with a salary of ${salary} ETB`);
+      console.log({ name, phone, email, salary, role, dob, gender });
+
+      // Clear the form
+      document.getElementById('hiringForm').reset();
+      salaryInput.value = ''; // Clear salary field
+    });
+  </script>
+</body>
+</html>

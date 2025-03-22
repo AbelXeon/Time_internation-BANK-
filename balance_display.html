@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Balance Display - Time International Bank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Embedded CSS */
+    body {
+      font-family: 'Lato', sans-serif;
+      background-color: #1e1e2f; /* Dark blue background */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff; /* White text */
+    }
+
+    .container {
+      background-color: #2a2a40; /* Slightly lighter blue for the container */
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 600px; /* Wider container */
+      text-align: center;
+      animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: #00d1b2; /* Teal color for the heading */
+    }
+
+    .balance-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .left-side {
+      flex: 1;
+    }
+
+    .right-side {
+      flex: 1;
+      text-align: right;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #00d1b2; /* Teal color for labels */
+    }
+
+    .user-info {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .balance-amount {
+      font-size: 48px; /* Large font for balance */
+      font-weight: bold;
+      color: #00d1b2; /* Teal color for balance */
+      animation: pulse 2s infinite; /* Pulse animation */
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Balance</h1>
+    <div class="balance-content">
+      <!-- Left Side -->
+      <div class="left-side">
+        <label for="name">Name:</label>
+        <div class="user-info">Test Test</div> <!-- Placeholder for name -->
+
+        <label for="accountNo">Account No:</label>
+        <div class="user-info">123456789</div> <!-- Placeholder for account number -->
+      </div>
+
+      <!-- Right Side -->
+      <div class="right-side">
+        <div class="balance-amount">100.0 ETB</div> <!-- Placeholder for balance -->
+      </div>
+    </div>
+  </div>
+</body>
+</html>

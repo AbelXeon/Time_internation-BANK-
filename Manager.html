@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard - Time International Bank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Embedded CSS */
+    body {
+      font-family: 'Lato', sans-serif;
+      background-color: #1e1e2f; /* Dark blue background */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff; /* White text */
+    }
+
+    .container {
+      background-color: #2a2a40; /* Slightly lighter blue for the container */
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 800px; /* Wider container */
+      text-align: center;
+      animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+      max-height: 90vh; /* Limit container height */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #00d1b2; /* Teal color for the heading */
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #fff; /* White color for the welcome message */
+    }
+
+    .user-info {
+      text-align: left;
+      margin-bottom: 30px;
+    }
+
+    .user-info label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #00d1b2; /* Teal color for labels */
+    }
+
+    .user-info div {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background-color: #3a3a4f; /* Dark card background */
+      padding: 20px;
+      border-radius: 10px;
+      width: 27%;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px); /* Lift effect on hover */
+    }
+
+    .stat-card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #00d1b2; /* Teal color for the stat title */
+    }
+
+    .stat-card p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff; /* White color for the stat value */
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .actions button {
+      flex: 1;
+      margin: 0 10px;
+      padding: 15px;
+      background-color: #00d1b2; /* Teal button */
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .actions button:hover {
+      background-color: #00b89c; /* Darker teal on hover */
+      transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+    .actions button:active {
+      transform: scale(0.95); /* Slight shrink effect on click */
+    }
+
+    .report, .employee-list {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .report h3, .employee-list h3 {
+      color: #00d1b2; /* Teal color for subheadings */
+    }
+
+    .report ul, .employee-list ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .report li, .employee-list li {
+      background-color: #3a3a4f; /* Dark list item background */
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Time International Bank</h1>
+    <h2>Welcome, Manager!</h2>
+
+    <!-- Manager Information -->
+    <div class="user-info">
+      <label for="name">Name:</label>
+      <div>Test Manager</div> <!-- Placeholder for manager name -->
+
+      <label for="empId">Employee ID:</label>
+      <div>MGR123</div> <!-- Placeholder for manager ID -->
+
+      <label for="role">Role:</label>
+      <div>Manager</div> <!-- Placeholder for manager role -->
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <h3>Total Employees</h3>
+        <p>50</p> <!-- Placeholder for total employees -->
+      </div>
+      <div class="stat-card">
+        <h3>Total Accounts</h3>
+        <p>1,200</p> <!-- Placeholder for total accounts -->
+      </div>
+      <div class="stat-card">
+        <h3>Total Balance</h3>
+        <p>10,000,000 ETB</p> <!-- Placeholder for total balance -->
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="viewReports">View Reports</button>
+      <button id="manageEmployees">Manage Employees</button>
+    </div>
+
+    <!-- Reports Section -->
+    <div class="report" id="reportSection" style="display: none;">
+      <h3>Hiring and Firing Reports</h3>
+      <ul>
+        <li>John Doe - Hired on 2023-10-01</li>
+        <li>Jane Smith - Fired on 2023-10-05</li>
+        <li>Alice Johnson - Hired on 2023-10-10</li>
+      </ul>
+    </div>
+
+    <!-- Employee List Section -->
+    <div class="employee-list" id="employeeListSection" style="display: none;">
+      <h3>Employee List</h3>
+      <ul>
+        <li>John Doe - Accountant - 15,000 ETB</li>
+        <li>Jane Smith - Manager - 30,000 ETB</li>
+        <li>Alice Johnson - Security - 5,000 ETB</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Embedded JavaScript
+    const viewReportsButton = document.getElementById('viewReports');
+    const manageEmployeesButton = document.getElementById('manageEmployees');
+    const reportSection = document.getElementById('reportSection');
+    const employeeListSection = document.getElementById('employeeListSection');
+
+    // Show Reports Section
+    viewReportsButton.addEventListener('click', function() {
+      reportSection.style.display = 'block';
+      employeeListSection.style.display = 'none';
+    });
+
+    // Show Employee List Section
+    manageEmployeesButton.addEventListener('click', function() {
+      employeeListSection.style.display = 'block';
+      reportSection.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
