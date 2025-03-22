@@ -17,6 +17,7 @@
       align-items: center;
       height: 100vh;
       color: #fff; /* White text */
+      overflow: hidden; /* Prevent scrolling when sidebar is open */
     }
 
     .container {
@@ -27,6 +28,7 @@
       width: 600px; /* Wider container */
       text-align: center;
       animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+      position: relative; /* For hamburger menu positioning */
     }
 
     @keyframes fadeIn {
@@ -97,10 +99,144 @@
     .button-row button:active {
       transform: scale(0.95); /* Slight shrink effect on click */
     }
+
+    /* Hamburger Menu */
+    .hamburger-menu {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 24px;
+      color: #00d1b2;
+      z-index: 1000; /* Ensure it's above other elements */
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .hamburger-menu.open {
+      transform: rotate(90deg); /* Transform to "X" */
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 180px;
+      right: -300px; /* Hide sidebar by default */
+      width: 250px;
+      height: 100%;
+      background-color: #2a2a40;
+      box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3);
+      transition: right 0.3s ease-in-out;
+      padding: 20px;
+      z-index: 999; /* Ensure it's above the container */
+    }
+
+    .sidebar.open {
+      right: 0; /* Show sidebar */
+    }
+
+    .sidebar button {
+      width: 100%;
+      padding: 15px;
+      background-color: #00d1b2;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 20px; /* Button at the top */
+    }
+
+    .sidebar button:hover {
+      background-color: #00b89c;
+      transform: scale(1.05);
+    }
+
+    /* Overlay for closing sidebar */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 998; /* Below sidebar */
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* Popup Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1001; /* Above everything */
+    }
+
+    .modal-content {
+      background-color: #2a2a40;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      animation: slideIn 0.3s ease-in-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+      color: #00d1b2;
+    }
+
+    .modal-content input {
+      width: 85%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 2px;
+      border: 1px solid #00d1b2;
+      background-color: #1e1e2f;
+      color: #fff;
+    }
+
+    .modal-content button {
+      padding: 10px 20px;
+      background-color: #00d1b2;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background-color: #00b89c;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" onclick="toggleSidebar()">&#9776;</div>
+
     <h1>Time International Bank</h1>
     <h2>Welcome, HR Manager!</h2>
 
@@ -123,8 +259,47 @@
     </div>
   </div>
 
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <button onclick="openModal()">Change Username & Password</button>
+  </div>
+
+  <!-- Popup Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>Change Username & Password</h3>
+      <input type="text" placeholder="Current Username">
+      <input type="text" placeholder="New Username">
+      <input type="password" placeholder="Current Password">
+      <input type="password" placeholder="New Password">
+      <button onclick="closeModal()">Save Changes</button>
+    </div>
+  </div>
+
   <script>
-    // Embedded JavaScript
+    // JavaScript for Sidebar, Overlay, and Modal
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      const hamburger = document.querySelector('.hamburger-menu');
+
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+      hamburger.classList.toggle('open');
+    }
+
+    function openModal() {
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // Existing JavaScript for Hire and Fire buttons
     document.querySelector('.button-row button:nth-child(1)').addEventListener('click', function() {
       alert('Hire button clicked!');
       console.log('Hire action initiated');
