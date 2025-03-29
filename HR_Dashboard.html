@@ -30,9 +30,9 @@
     .hr-dashboard {
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px 0;
     }
 
     .dashboard-container {
@@ -44,6 +44,7 @@
       text-align: center;
       animation: fadeIn 1s ease-in-out;
       position: relative;
+      margin: 20px 0;
     }
 
     .dashboard-container h1 {
@@ -239,8 +240,9 @@
     .hire-page, .fire-page {
       display: none;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px 0;
     }
 
     .hire-container, .fire-container {
@@ -250,6 +252,7 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       text-align: center;
       animation: fadeIn 1s ease-in-out;
+      margin: 20px 0;
     }
 
     .hire-container {
@@ -349,6 +352,160 @@
     .back-button:hover {
       background-color: #00b89c;
     }
+
+    /* Success/Fire Popups */
+    .success-popup, .fire-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #2a2a40;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      z-index: 1002;
+      text-align: center;
+      max-width: 400px;
+      animation: fadeIn 0.5s;
+    }
+    
+    .success-popup h3 {
+      color: #00d1b2;
+      margin-bottom: 20px;
+    }
+    
+    .fire-popup h3 {
+      color: #ff4d4d;
+      margin-bottom: 20px;
+    }
+    
+    .employee-card {
+      background: #3a3a4f;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: left;
+    }
+    
+    .emp-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00d1b2;
+      margin-bottom: 10px;
+    }
+    
+    .emp-id span {
+      font-family: monospace;
+      font-size: 18px;
+      color: #fff;
+      background: #1e1e2f;
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+    
+    .emp-credentials {
+      margin: 15px 0;
+    }
+    
+    .warning {
+      color: #ffcc00;
+      font-style: italic;
+      margin-top: 10px;
+    }
+    
+    .fire-animation {
+      font-size: 60px;
+      animation: burn 1.5s infinite alternate;
+      margin: 20px 0;
+    }
+    
+    @keyframes burn {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.2); }
+    }
+    
+    .success-popup button, .fire-popup button {
+      padding: 10px 20px;
+      background: #00d1b2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    
+    .fire-popup button {
+      background: #ff4d4d;
+    }
+
+    /* Department Stats */
+    .stats-container {
+      background: #3a3a4f;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      font-weight: bold;
+      color: #00d1b2;
+    }
+
+    .stat-value {
+      font-family: monospace;
+    }
+
+    /* Recent Actions */
+    .recent-actions {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .action-item {
+      background: #3a3a4f;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .action-type {
+      font-weight: bold;
+      color: #00d1b2;
+    }
+
+    .action-date {
+      font-size: 0.8em;
+      color: #aaa;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #2a2a40;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #00d1b2;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00b89c;
+    }
   </style>
 </head>
 <body>
@@ -359,24 +516,36 @@
       <div class="hamburger-menu" onclick="toggleSidebar()">&#9776;</div>
 
       <h1>Time International Bank</h1>
-      <h2>Welcome, HR Manager!</h2>
+      <h2>Welcome, <span id="hrName">HR Manager</span>!</h2>
 
       <!-- User Information -->
       <div class="user-info">
         <label for="name">Name:</label>
-        <div>Test Test</div>
+        <div id="userName">Loading...</div>
 
         <label for="empId">Employee ID:</label>
-        <div>EMP123</div>
+        <div id="userEmpId">Loading...</div>
 
         <label for="role">Role:</label>
-        <div>HR Manager</div>
+        <div id="userRole">Loading...</div>
       </div>
 
       <!-- Horizontal Buttons -->
       <div class="button-row">
         <button onclick="showHirePage()">Hire</button>
         <button onclick="showFirePage()">Fire</button>
+      </div>
+
+      <!-- Department Stats -->
+      <div class="stats-container" id="departmentStats">
+        <h3>Department Statistics</h3>
+        <div id="statsContent">Loading department statistics...</div>
+      </div>
+
+      <!-- Recent Actions -->
+      <div class="recent-actions">
+        <h3>Recent Actions</h3>
+        <div id="actionsContent">Loading recent actions...</div>
       </div>
     </div>
 
@@ -391,12 +560,12 @@
     <!-- Popup Modal -->
     <div class="modal" id="modal">
       <div class="modal-content">
-        <h3>Change Username & Password</h3>
-        <input type="text" placeholder="Current Username">
-        <input type="text" placeholder="New Username">
-        <input type="password" placeholder="Current Password">
-        <input type="password" placeholder="New Password">
-        <button onclick="closeModal()">Save Changes</button>
+        <h3>Change Credentials</h3>
+        <input type="text" id="currentUsername" placeholder="Current Username">
+        <input type="text" id="newUsername" placeholder="New Username">
+        <input type="password" id="currentPassword" placeholder="Current Password">
+        <input type="password" id="newPassword" placeholder="New Password">
+        <button onclick="updateCredentials()">Save Changes</button>
       </div>
     </div>
   </div>
@@ -413,7 +582,7 @@
         <div class="form-grid">
           <!-- Left Side -->
           <div class="left-side">
-            <label for="hire-name">Name:</label>
+            <label for="hire-name">Full Name:</label>
             <input type="text" id="hire-name" name="name" required>
 
             <label for="phone">Phone:</label>
@@ -431,11 +600,12 @@
             <label for="role">Role:</label>
             <select id="role" name="role" required>
               <option value="">Select Role</option>
-              <option value="15000">Accountant</option>
-              <option value="30000">Manager</option>
-              <option value="5000">Security</option>
-              <option value="5000">Cleaner</option>
-              <option value="10000">Finance</option>
+              <option value="Accountant">Accountant</option>
+              <option value="Manager">Manager</option>
+              <option value="Security">Security</option>
+              <option value="Cleaner">Cleaner</option>
+              <option value="Finance">Finance</option>
+              <option value="HR">HR</option>
             </select>
 
             <label for="dob">Date of Birth:</label>
@@ -444,8 +614,8 @@
             <label for="gender">Gender:</label>
             <select id="gender" name="gender" required>
               <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
             </select>
           </div>
         </div>
@@ -464,23 +634,53 @@
 
       <!-- Firing Form -->
       <form id="firingForm">
-        <label for="fire-name">Name:</label>
+        <label for="fire-name">Full Name:</label>
         <input type="text" id="fire-name" name="name" required>
 
         <label for="empId">Employee ID:</label>
         <input type="text" id="empId" name="empId" required>
 
-        <button type="submit">Fire Employee</button>
+        <button type="submit">Terminate Employee</button>
       </form>
     </div>
   </div>
 
   <script>
+    const API_BASE_URL = 'http://localhost:8000/api';
+    
+    // Salary mapping based on role
+    const roleSalaries = {
+      'Accountant': 15000,
+      'Manager': 30000,
+      'Security': 5000,
+      'Cleaner': 5000,
+      'Finance': 10000,
+      'HR': 12000
+    };
+
+    // Department ID mapping
+    const roleToDepartmentId = {
+      'Accountant': 4,
+      'Manager': 7,
+      'Security': 5,
+      'Cleaner': 6,
+      'Finance': 2,
+      'HR': 1
+    };
+
+    // Auto-fill salary when role is selected
+    document.getElementById('role').addEventListener('change', function() {
+      const selectedRole = this.value;
+      const salaryInput = document.getElementById('salary');
+      salaryInput.value = roleSalaries[selectedRole] || '';
+    });
+
     // Page Navigation Functions
     function showDashboard() {
       document.getElementById('hrDashboard').style.display = 'flex';
       document.getElementById('hirePage').style.display = 'none';
       document.getElementById('firePage').style.display = 'none';
+      loadDashboardData();
     }
 
     function showHirePage() {
@@ -514,58 +714,277 @@
       document.getElementById('modal').style.display = 'none';
     }
 
-    // Hire Page JavaScript
-    const roleSelect = document.getElementById('role');
-    const salaryInput = document.getElementById('salary');
+    // Load HR manager data
+    async function loadHRManagerData() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/get-hr-data`);
+        if (!response.ok) throw new Error('Failed to fetch HR data');
+        
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Invalid HR data');
+        
+        document.getElementById('userName').textContent = result.name;
+        document.getElementById('userEmpId').textContent = result.emp_id;
+        document.getElementById('userRole').textContent = result.role;
+        document.getElementById('hrName').textContent = result.name;
+        
+        sessionStorage.setItem('hrName', result.name);
+        sessionStorage.setItem('hrEmpId', result.emp_id);
+        sessionStorage.setItem('hrRole', result.role);
+      } catch (error) {
+        console.error('Error loading HR data:', error);
+        document.getElementById('userName').textContent = sessionStorage.getItem('hrName') || 'HR Manager';
+        document.getElementById('userEmpId').textContent = sessionStorage.getItem('hrEmpId') || 'HR001';
+        document.getElementById('userRole').textContent = sessionStorage.getItem('hrRole') || 'HR Manager';
+        document.getElementById('hrName').textContent = sessionStorage.getItem('hrName') || 'HR Manager';
+      }
+    }
 
-    roleSelect.addEventListener('change', function() {
-      const selectedRole = roleSelect.value;
-      salaryInput.value = selectedRole;
+    // Load department stats
+    async function loadDepartmentStats() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/get-department-stats`);
+        if (!response.ok) throw new Error('Failed to fetch department stats');
+        
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Invalid department data');
+        
+        const allDepts = ['HR', 'Finance', 'Accountant', 'Security', 'Cleaner', 'Manager'];
+        let statsHTML = '';
+        
+        allDepts.forEach(dept => {
+          const stat = result.data.find(d => d.dep_name === dept) || {employee_count: 0};
+          statsHTML += `
+            <div class="stat-item">
+              <span class="stat-label">${dept}:</span>
+              <span class="stat-value">${stat.employee_count}</span>
+            </div>
+          `;
+        });
+        
+        document.getElementById('statsContent').innerHTML = statsHTML;
+      } catch (error) {
+        console.error('Error loading department stats:', error);
+        document.getElementById('statsContent').textContent = 'Error loading statistics';
+      }
+    }
+
+    // Load recent actions
+    async function loadRecentActions() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/get-recent-actions`);
+        if (!response.ok) throw new Error('Failed to fetch recent actions');
+        
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Invalid actions data');
+        
+        let actionsHTML = result.data.length > 0 
+          ? result.data.map(action => `
+              <div class="action-item">
+                <div class="action-type">${action.action_type}: ${action.emp_name}</div>
+                <div>${action.details}</div>
+                <div class="action-date">${new Date(action.action_date).toLocaleString()}</div>
+              </div>
+            `).join('')
+          : '<div class="action-item">No recent actions found</div>';
+        
+        document.getElementById('actionsContent').innerHTML = actionsHTML;
+      } catch (error) {
+        console.error('Error loading recent actions:', error);
+        document.getElementById('actionsContent').textContent = 'Error loading recent actions';
+      }
+    }
+
+    // Hire employee
+    document.getElementById('hiringForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processing...';
+      
+      try {
+        const formData = {
+          name: document.getElementById('hire-name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          salary: document.getElementById('salary').value.trim(),
+          role: document.getElementById('role').value.trim(),
+          dob: document.getElementById('dob').value.trim(),
+          gender: document.getElementById('gender').value.trim()
+        };
+
+        if (!formData.name || !formData.phone || !formData.email || 
+            !formData.salary || !formData.role || !formData.dob || !formData.gender) {
+          throw new Error('All fields are required');
+        }
+
+        const response = await fetch(`${API_BASE_URL}/hire-employee`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to hire employee');
+        }
+
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Hiring failed');
+        }
+        
+        const successHTML = `
+          <div class="success-popup">
+            <h3>🎉 Employee Hired Successfully! 🎉</h3>
+            <div class="employee-card">
+              <div class="emp-name">${formData.name}</div>
+              <div class="emp-id">Employee ID: <span>${result.emp_id}</span></div>
+              <div class="emp-credentials">
+                <p><strong>Username:</strong> ${result.username}</p>
+                <p><strong>Temporary Password:</strong> ${result.default_password}</p>
+              </div>
+              <div class="warning">⚠️ Employee must change password on first login</div>
+            </div>
+            <button onclick="closeSuccessPopup()">Close</button>
+          </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', successHTML);
+        this.reset();
+        document.getElementById('salary').value = '';
+        loadDashboardData();
+      } catch (error) {
+        console.error('Hiring error:', error);
+        alert(`Error: ${error.message}`);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Hire Employee';
+      }
     });
 
-    document.getElementById('hiringForm').addEventListener('submit', function(event) {
+    // Fire employee
+    document.getElementById('firingForm').addEventListener('submit', async function(event) {
       event.preventDefault();
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processing...';
+      
+      try {
+        const formData = {
+          name: document.getElementById('fire-name').value.trim(),
+          empId: document.getElementById('empId').value.trim()
+        };
 
-      const name = document.getElementById('hire-name').value;
-      const phone = document.getElementById('phone').value;
-      const email = document.getElementById('email').value;
-      const salary = document.getElementById('salary').value;
-      const role = roleSelect.options[roleSelect.selectedIndex].text;
-      const dob = document.getElementById('dob').value;
-      const gender = document.getElementById('gender').value;
+        if (!formData.name || !formData.empId) {
+          throw new Error('Both name and employee ID are required');
+        }
 
-      if (!name || !phone || !email || !salary || !role || !dob || !gender) {
-        alert('Please fill in all fields.');
+        const response = await fetch(`${API_BASE_URL}/fire-employee`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fire employee');
+        }
+
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Firing failed');
+        }
+        
+        const fireHTML = `
+          <div class="fire-popup">
+            <div class="fire-animation">🔥</div>
+            <h3>Employee Terminated</h3>
+            <p>${result.message}</p>
+            <p class="warning">Access revoked immediately!</p>
+            <button onclick="closeFirePopup()">Acknowledge</button>
+          </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', fireHTML);
+        this.reset();
+        loadDashboardData();
+      } catch (error) {
+        console.error('Firing error:', error);
+        alert(`Error: ${error.message}`);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Terminate Employee';
+      }
+    });
+
+    // Update credentials
+    async function updateCredentials() {
+      const currentUsername = document.getElementById('currentUsername').value;
+      const newUsername = document.getElementById('newUsername').value;
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+
+      if (!currentUsername || !newUsername || !currentPassword || !newPassword) {
+        alert('Please fill in all fields');
         return;
       }
 
-      alert(`Hiring ${name} as ${role} with a salary of ${salary} ETB`);
-      console.log({ name, phone, email, salary, role, dob, gender });
-
-      document.getElementById('hiringForm').reset();
-      salaryInput.value = '';
-    });
-
-    // Fire Page JavaScript
-    document.getElementById('firingForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const name = document.getElementById('fire-name').value;
-      const empId = document.getElementById('empId').value;
-
-      if (!name || !empId) {
-        alert('Please fill in all fields.');
-        return;
+      try {
+        const response = await fetch(`${API_BASE_URL}/update-credentials`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            currentUsername,
+            newUsername,
+            currentPassword,
+            newPassword
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Failed to update credentials');
+        }
+        
+        alert('Credentials updated successfully!');
+        closeModal();
+      } catch (error) {
+        console.error('Error updating credentials:', error);
+        alert(`Error: ${error.message}`);
       }
+    }
 
-      alert(`Firing employee: ${name} (ID: ${empId})`);
-      console.log(`Name: ${name}, Employee ID: ${empId}`);
+    // Close popup functions
+    function closeSuccessPopup() {
+      document.querySelector('.success-popup').remove();
+    }
 
-      document.getElementById('firingForm').reset();
+    function closeFirePopup() {
+      document.querySelector('.fire-popup').remove();
+    }
+
+    // Load all dashboard data
+    function loadDashboardData() {
+      loadHRManagerData();
+      loadDepartmentStats();
+      loadRecentActions();
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      loadDashboardData();
+      showDashboard();
     });
-
-    // Initialize by showing dashboard
-    showDashboard();
   </script>
 </body>
 </html>
