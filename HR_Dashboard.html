@@ -701,106 +701,84 @@
     function closeModal() {
       document.getElementById('modal').style.display = 'none';
     }
+// Replace these functions in your existing HTML file:
 
-    // Load HR manager data
-    async function loadHRManagerData() {
-      try {
-        // For demo purposes, we'll use mock data
-        // In a real app, you would fetch this from your backend
-        const mockHRData = {
-          name: "John Doe",
-          emp_id: "HR001",
-          role: "HR Manager"
-        };
+async function loadHRManagerData() {
+    try {
+        const response = await fetch('http://localhost:8000/api/current-user');
+        const result = await response.json();
         
-        document.getElementById('userName').textContent = mockHRData.name;
-        document.getElementById('userEmpId').textContent = mockHRData.emp_id;
-        document.getElementById('userRole').textContent = mockHRData.role;
-        document.getElementById('hrName').textContent = mockHRData.name;
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to load user data');
+        }
         
-        sessionStorage.setItem('hrName', mockHRData.name);
-        sessionStorage.setItem('hrEmpId', mockHRData.emp_id);
-        sessionStorage.setItem('hrRole', mockHRData.role);
-      } catch (error) {
+        document.getElementById('userName').textContent = result.user.name;
+        document.getElementById('userEmpId').textContent = result.user.emp_id;
+        document.getElementById('userRole').textContent = result.user.role;
+        document.getElementById('hrName').textContent = result.user.name;
+        
+        sessionStorage.setItem('hrName', result.user.name);
+        sessionStorage.setItem('hrEmpId', result.user.emp_id);
+        sessionStorage.setItem('hrRole', result.user.role);
+    } catch (error) {
         console.error('Error loading HR data:', error);
-        // Fallback to session storage
         document.getElementById('userName').textContent = sessionStorage.getItem('hrName') || 'HR Manager';
         document.getElementById('userEmpId').textContent = sessionStorage.getItem('hrEmpId') || 'HR001';
         document.getElementById('userRole').textContent = sessionStorage.getItem('hrRole') || 'HR Manager';
         document.getElementById('hrName').textContent = sessionStorage.getItem('hrName') || 'HR Manager';
-      }
     }
+}
 
-    // Load department stats
-    async function loadDepartmentStats() {
-      try {
-        // Mock data for demo
-        const mockStats = [
-          { dep_name: 'HR', employee_count: 5 },
-          { dep_name: 'Finance', employee_count: 12 },
-          { dep_name: 'Accountant', employee_count: 8 },
-          { dep_name: 'Security', employee_count: 15 },
-          { dep_name: 'Cleaner', employee_count: 10 },
-          { dep_name: 'Manager', employee_count: 3 }
-        ];
+async function loadDepartmentStats() {
+    try {
+        const response = await fetch('http://localhost:8000/api/department-stats');
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to load department stats');
+        }
         
         let statsHTML = '';
         
-        mockStats.forEach(stat => {
-          statsHTML += `
-            <div class="stat-item">
-              <span class="stat-label">${stat.dep_name}:</span>
-              <span class="stat-value">${stat.employee_count}</span>
-            </div>
-          `;
+        result.stats.forEach(stat => {
+            statsHTML += `
+                <div class="stat-item">
+                    <span class="stat-label">${stat.dep_name}:</span>
+                    <span class="stat-value">${stat.employee_count}</span>
+                </div>
+            `;
         });
         
         document.getElementById('statsContent').innerHTML = statsHTML;
-      } catch (error) {
+    } catch (error) {
         console.error('Error loading department stats:', error);
         document.getElementById('statsContent').textContent = 'Error loading statistics';
-      }
     }
+}
 
-    // Load recent actions
-    async function loadRecentActions() {
-      try {
-        // Mock data for demo
-        const mockActions = [
-          {
-            action_type: 'Hire',
-            emp_name: 'Alice Johnson',
-            details: 'Hired as Accountant with salary 15000',
-            action_date: new Date().toISOString()
-          },
-          {
-            action_type: 'Promotion',
-            emp_name: 'Bob Smith',
-            details: 'Promoted to Senior Manager',
-            action_date: new Date(Date.now() - 86400000).toISOString()
-          },
-          {
-            action_type: 'Hire',
-            emp_name: 'Charlie Brown',
-            details: 'Hired as Security with salary 5000',
-            action_date: new Date(Date.now() - 172800000).toISOString()
-          }
-        ];
+async function loadRecentActions() {
+    try {
+        const response = await fetch('http://localhost:8000/api/recent-actions');
+        const result = await response.json();
         
-        let actionsHTML = mockActions.map(action => `
-          <div class="action-item">
-            <div class="action-type">${action.action_type}: ${action.emp_name}</div>
-            <div>${action.details}</div>
-            <div class="action-date">${new Date(action.action_date).toLocaleString()}</div>
-          </div>
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to load recent actions');
+        }
+        
+        let actionsHTML = result.actions.map(action => `
+            <div class="action-item">
+                <div class="action-type">${action.action_type}: ${action.emp_id}</div>
+                <div>${action.details}</div>
+                <div class="action-date">${new Date(action.action_date).toLocaleString()}</div>
+            </div>
         `).join('');
         
         document.getElementById('actionsContent').innerHTML = actionsHTML;
-      } catch (error) {
+    } catch (error) {
         console.error('Error loading recent actions:', error);
         document.getElementById('actionsContent').textContent = 'Error loading recent actions';
-      }
     }
+}
 
     // Hire employee with backend integration
     document.getElementById('hiringForm').addEventListener('submit', async function(event) {
