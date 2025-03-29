@@ -123,7 +123,6 @@ def get_departments():
             cursor.close()
         if conn:
             conn.close()
-
 @app.route('/api/hire', methods=['POST'])
 def hire_employee():
     conn = None
@@ -142,9 +141,12 @@ def hire_employee():
 
         # Generate employee details
         emp_id = generate_employee_id()
+        
+        # For all employees, we'll generate credentials but only show them for specific roles
         temp_password = generate_password()
         username = f"{data['name'].split()[0].lower()}.{data['name'].split()[-1].lower() if len(data['name'].split()) > 1 else ''}"
-        
+        hashed_password = hash_password(temp_password)
+
         conn = get_db()
         if not conn:
             return jsonify({'success': False, 'error': 'Database connection failed'}), 500
@@ -158,7 +160,7 @@ def hire_employee():
                 break
             emp_id = generate_employee_id()
 
-        # Insert employee
+        # Insert employee with credentials (all employees get them, but we only expose for certain roles)
         cursor.execute("""
             INSERT INTO employee (
                 emp_id, emp_name, gender, dep_id, job_title, salary, dbo, phone, 
@@ -167,7 +169,7 @@ def hire_employee():
         """, (
             emp_id, data['name'], data['gender'], dep_id, data['role'],
             float(data['salary']), datetime.strptime(data['dob'], '%Y-%m-%d').date(),
-            data['phone'], data['email'], username, hash_password(temp_password)
+            data['phone'], data['email'], username, hashed_password
         ))
 
         # Assign to random branch
@@ -176,21 +178,26 @@ def hire_employee():
             cursor.execute("INSERT INTO employee_branch (emp_id, branch_id) VALUES (%s, %s)", 
                          (emp_id, branch['branch_id']))
 
-        # Log hiring action
+        # Log hiring action with employee name
         cursor.execute("""
             INSERT INTO employee_actions (emp_id, action_type, details)
             VALUES (%s, 'Hire', %s)
-        """, (emp_id, f"Hired as {data['role']} with salary {data['salary']}"))
+        """, (emp_id, f"Hired {data['name']} as {data['role']} with salary {data['salary']}"))
 
         conn.commit()
         
-        return jsonify({
+        response_data = {
             'success': True,
             'emp_id': emp_id,
-            'username': username,
-            'temp_password': temp_password,
             'message': 'Employee hired successfully'
-        })
+        }
+        
+        # Only return credentials for specific roles
+        if data['role'] in ['Manager', 'Accountant', 'HR']:
+            response_data['username'] = username
+            response_data['temp_password'] = temp_password
+        
+        return jsonify(response_data)
 
     except Exception as e:
         if conn:
@@ -201,10 +208,6 @@ def hire_employee():
             cursor.close()
         if conn:
             conn.close()
-
-
-
-# Add these new routes to your existing app.py
 
 @app.route('/api/current-user', methods=['GET'])
 def get_current_user():
@@ -279,8 +282,10 @@ def get_recent_actions():
         cursor = conn.cursor(dictionary=True)
         
         cursor.execute("""
-            SELECT * FROM employee_actions
-            ORDER BY action_date DESC
+            SELECT ea.*, e.emp_name 
+            FROM employee_actions ea
+            LEFT JOIN employee e ON ea.emp_id = e.emp_id
+            ORDER BY ea.action_date DESC
             LIMIT 5
         """)
         actions = cursor.fetchall()
@@ -297,8 +302,101 @@ def get_recent_actions():
         if conn:
             conn.close()
 
+@app.route('/api/fire', methods=['POST'])
+def fire_employee():
+    conn = None
+    cursor = None
+    try:
+        data = request.json
+        required_fields = ['empId', 'name']
+        
+        if not all(field in data for field in required_fields):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
 
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
 
+        # Verify employee exists
+        cursor.execute("SELECT * FROM employee WHERE emp_id = %s AND emp_name = %s", 
+                      (data['empId'], data['name']))
+        employee = cursor.fetchone()
+        
+        if not employee:
+            return jsonify({'success': False, 'error': 'Employee not found'}), 404
+
+        # Log firing action
+        cursor.execute("""
+            INSERT INTO employee_actions (emp_id, action_type, details)
+            VALUES (%s, 'Fire', %s)
+        """, (data['empId'], f"Terminated employee {data['name']} (ID: {data['empId']})"))
+
+        # Remove employee (or mark as inactive based on your schema)
+        cursor.execute("UPDATE employee SET job_title = NULL WHERE emp_id = %s", (data['empId'],))
+
+        conn.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Employee terminated successfully'
+        })
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@app.route('/api/update-credentials', methods=['POST'])
+def update_credentials():
+    conn = None
+    cursor = None
+    try:
+        data = request.json
+        required_fields = ['currentUsername', 'newUsername', 'currentPassword', 'newPassword']
+        
+        if not all(field in data for field in required_fields):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+
+        # Verify current credentials
+        cursor.execute("""
+            SELECT * FROM employee 
+            WHERE username = %s AND passwords = %s
+        """, (data['currentUsername'], hash_password(data['currentPassword'])))
+        
+        employee = cursor.fetchone()
+        if not employee:
+            return jsonify({'success': False, 'error': 'Invalid current credentials'}), 401
+
+        # Update credentials
+        cursor.execute("""
+            UPDATE employee 
+            SET username = %s, passwords = %s
+            WHERE emp_id = %s
+        """, (data['newUsername'], hash_password(data['newPassword']), employee['emp_id']))
+
+        conn.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Credentials updated successfully'
+        })
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 if __name__ == '__main__':
     if not os.path.exists('templates'):
