@@ -3,67 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Accountant Dashboard - Time International Bank</title>
+  <title>Time International Bank</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Embedded CSS */
+    /* Embedded CSS - Combined all styles */
     body {
       font-family: 'Lato', sans-serif;
-      background-color: #1e1e2f; /* Dark blue background */
+      background-color: #1e1e2f;
       margin: 0;
       padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      color: #fff; /* White text */
-      overflow: hidden; /* Prevent scrolling when sidebar is open */
+      color: #fff;
+      overflow: hidden;
     }
 
-    .container {
-      background-color: #2a2a40; /* Slightly lighter blue for the container */
+    /* Dashboard Styles */
+    .dashboard-container {
+      background-color: #2a2a40;
       padding: 25px;
       border-radius: 10px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      width: 600px; /* Wider container */
+      width: 600px;
       text-align: center;
-      animation: fadeIn 1s ease-in-out; /* Fade-in animation */
-      position: relative; /* For hamburger menu positioning */
+      animation: fadeIn 1s ease-in-out;
+      position: relative;
     }
 
+    /* Common Styles */
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h1 {
       font-size: 28px;
       margin-bottom: 10px;
-      color: #00d1b2; /* Teal color for the heading */
+      color: #00d1b2;
     }
 
     h2 {
       font-size: 24px;
       margin-bottom: 20px;
-      color: #fff; /* White color for the welcome message */
+      color: #fff;
     }
 
-    .user-info {
-      text-align: left;
-      margin-bottom: 30px;
-    }
-
-    .user-info label {
+    label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
-      color: #00d1b2; /* Teal color for labels */
+      color: #00d1b2;
+    }
+
+    input, select, textarea {
+      width: 85%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      background-color: #3a3a4f;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #00d1b2;
+      outline: none;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #00d1b2;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00b89c;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    /* Dashboard Specific */
+    .user-info {
+      text-align: left;
+      margin-bottom: 30px;
     }
 
     .user-info div {
@@ -81,49 +115,15 @@
       flex: 1;
       margin: 0 10px;
       padding: 15px;
-      background-color: #00d1b2; /* Teal button */
-      color: #fff;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .button-row button:hover {
-      background-color: #00b89c; /* Darker teal on hover */
-      transform: scale(1.05); /* Slight zoom effect on hover */
-    }
-
-    .button-row button:active {
-      transform: scale(0.95); /* Slight shrink effect on click */
     }
 
     .create-account-button {
       width: 50%;
       margin: 0 auto;
       padding: 15px;
-      background-color: #00d1b2; /* Teal button */
-      color: #fff;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
-    .create-account-button:hover {
-      background-color: #00b89c; /* Darker teal on hover */
-      transform: scale(1.05); /* Slight zoom effect on hover */
-    }
-
-    .create-account-button:active {
-      transform: scale(0.95); /* Slight shrink effect on click */
-    }
-
-    /* Hamburger Menu */
+    /* Sidebar and Modal */
     .hamburger-menu {
       position: absolute;
       top: 20px;
@@ -131,52 +131,37 @@
       cursor: pointer;
       font-size: 24px;
       color: #00d1b2;
-      z-index: 1000; /* Ensure it's above other elements */
+      z-index: 1000;
       transition: transform 0.3s ease-in-out;
     }
 
     .hamburger-menu.open {
-      transform: rotate(90deg); /* Transform to "X" */
+      transform: rotate(90deg);
     }
 
-    /* Sidebar */
     .sidebar {
       position: fixed;
       top: 130px;
-      right: -300px; /* Hide sidebar by default */
+      right: -300px;
       width: 250px;
       height: 100%;
       background-color: #2a2a40;
       box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3);
       transition: right 0.3s ease-in-out;
       padding: 20px;
-      z-index: 999; /* Ensure it's above the container */
+      z-index: 999;
     }
 
     .sidebar.open {
-      right: 0; /* Show sidebar */
+      right: 0;
     }
 
     .sidebar button {
       width: 100%;
       padding: 15px;
-      background-color: #00d1b2;
-      color: #fff;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      margin-top: 20px; /* Button at the top */
+      margin-top: 20px;
     }
 
-    .sidebar button:hover {
-      background-color: #00b89c;
-      transform: scale(1.05);
-    }
-
-    /* Overlay for closing sidebar */
     .overlay {
       display: none;
       position: fixed;
@@ -185,14 +170,13 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-      z-index: 998; /* Below sidebar */
+      z-index: 998;
     }
 
     .overlay.active {
       display: block;
     }
 
-    /* Popup Modal */
     .modal {
       display: none;
       position: fixed;
@@ -203,7 +187,7 @@
       background-color: rgba(0, 0, 0, 0.5);
       justify-content: center;
       align-items: center;
-      z-index: 1001; /* Above everything */
+      z-index: 1001;
     }
 
     .modal-content {
@@ -216,14 +200,8 @@
     }
 
     @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .modal-content h3 {
@@ -238,63 +216,108 @@
       border-radius: 30px;
       border: 1px solid #00d1b2;
       background-color: #1e1e2f;
-      color: #fff;
     }
 
     .modal-content button {
       padding: 10px 20px;
-      background-color: #00d1b2;
-      color: #fff;
-      border: none;
       border-radius: 5px;
-      cursor: pointer;
     }
 
-    .modal-content button:hover {
-      background-color: #00b89c;
+    /* Page Containers */
+    .page-container {
+      display: none;
+      background-color: #2a2a40;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      width: 350px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .page-container.active {
+      display: block;
+    }
+
+    /* Balance Page */
+    .balance-container {
+      width: 350px;
+    }
+
+    /* Withdraw/Deposit Pages */
+    .transaction-container {
+      width: 350px;
+    }
+
+    /* Create Account Page */
+    .create-account-container {
+      width: 80%;
+      max-width: 800px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .left-column, .right-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    /* Back Button */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      color: #00d1b2;
+      cursor: pointer;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Hamburger Menu -->
+  <!-- Dashboard -->
+  <div class="dashboard-container" id="dashboard">
     <div class="hamburger-menu" onclick="toggleSidebar()">&#9776;</div>
 
     <h1>Time International Bank</h1>
     <h2>Welcome, Accountant!</h2>
 
-    <!-- User Information -->
     <div class="user-info">
       <label for="name">Name:</label>
-      <div>Test Test</div> <!-- Placeholder for name -->
+      <div>Test Test</div>
 
       <label for="empId">Employee ID:</label>
-      <div>EMP123</div> <!-- Placeholder for employee ID -->
+      <div>EMP123</div>
 
       <label for="role">Role:</label>
-      <div>Accountant</div> <!-- Placeholder for role -->
+      <div>Accountant</div>
     </div>
 
-    <!-- Horizontal Buttons -->
     <div class="button-row">
-      <button>Withdraw</button>
-      <button>Deposit</button>
-      <button>Balance</button>
+      <button onclick="showPage('withdraw')">Withdraw</button>
+      <button onclick="showPage('deposit')">Deposit</button>
+      <button onclick="showPage('balance')">Balance</button>
     </div>
 
-    <!-- Create Account Button -->
-    <button class="create-account-button">Create Account</button>
+    <button class="create-account-button" onclick="showPage('create-account')">Create Account</button>
   </div>
 
-  <!-- Overlay -->
+  <!-- Sidebar and Modal (Shared across pages) -->
   <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <button onclick="openModal()">Change Username & Password</button>
   </div>
 
-  <!-- Popup Modal -->
   <div class="modal" id="modal">
     <div class="modal-content">
       <h3>Change Username & Password</h3>
@@ -306,8 +329,96 @@
     </div>
   </div>
 
+  <!-- Balance Page -->
+  <div class="page-container balance-container" id="balance-page">
+    <div class="back-button" onclick="showPage('dashboard')">←</div>
+    <h1>Time International Bank</h1>
+    <h2>Balance</h2>
+    <form id="balanceForm">
+      <label for="balanceAccountNo">Account No:</label>
+      <input type="text" id="balanceAccountNo" name="accountNo" required>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- Withdraw Page -->
+  <div class="page-container transaction-container" id="withdraw-page">
+    <div class="back-button" onclick="showPage('dashboard')">←</div>
+    <h1>Time International Bank</h1>
+    <h2>Withdraw</h2>
+    <form id="withdrawForm">
+      <label for="withdrawAccountNo">Account No:</label>
+      <input type="text" id="withdrawAccountNo" name="accountNo" required>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- Deposit Page -->
+  <div class="page-container transaction-container" id="deposit-page">
+    <div class="back-button" onclick="showPage('dashboard')">←</div>
+    <h1>Time International Bank</h1>
+    <h2>Deposit</h2>
+    <form id="depositForm">
+      <label for="depositAccountNo">Account No:</label>
+      <input type="text" id="depositAccountNo" name="accountNo" required>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- Create Account Page -->
+  <div class="page-container create-account-container" id="create-account-page">
+    <div class="back-button" onclick="showPage('dashboard')">←</div>
+    <h1>Time International Bank</h1>
+    <h2>Create Account</h2>
+    <form id="createAccountForm">
+      <div class="form-grid">
+        <div class="left-column">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+          <label for="phone">Phone:</label>
+          <input type="tel" id="phone" name="phone" required>
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="right-column">
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" name="dob" required>
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <label for="address">Address:</label>
+          <textarea id="address" name="address" rows="3" required></textarea>
+        </div>
+      </div>
+      <button type="submit">Create Account</button>
+    </form>
+  </div>
+
   <script>
-    // JavaScript for Sidebar, Overlay, and Modal
+    // Navigation between pages
+    function showPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page-container').forEach(page => {
+        page.classList.remove('active');
+      });
+      
+      // Hide dashboard
+      document.getElementById('dashboard').style.display = 'none';
+      
+      // Show selected page
+      if (pageId === 'dashboard') {
+        document.getElementById('dashboard').style.display = 'block';
+      } else {
+        document.getElementById(`${pageId}-page`).classList.add('active');
+      }
+      
+      // Close sidebar if open
+      closeSidebar();
+    }
+
+    // Sidebar functions
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('overlay');
@@ -318,13 +429,77 @@
       hamburger.classList.toggle('open');
     }
 
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('active');
+      document.querySelector('.hamburger-menu').classList.remove('open');
+    }
+
+    // Modal functions
     function openModal() {
       document.getElementById('modal').style.display = 'flex';
+      closeSidebar();
     }
 
     function closeModal() {
       document.getElementById('modal').style.display = 'none';
     }
+
+    // Form submissions
+    document.getElementById('balanceForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const accountNo = document.getElementById('balanceAccountNo').value;
+      if (!accountNo) {
+        alert('Please enter an account number.');
+        return;
+      }
+      alert(`Searching for balance of account: ${accountNo}`);
+      this.reset();
+    });
+
+    document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const accountNo = document.getElementById('withdrawAccountNo').value;
+      if (!accountNo) {
+        alert('Please enter an account number.');
+        return;
+      }
+      alert(`Searching for account to withdraw: ${accountNo}`);
+      this.reset();
+    });
+
+    document.getElementById('depositForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const accountNo = document.getElementById('depositAccountNo').value;
+      if (!accountNo) {
+        alert('Please enter an account number.');
+        return;
+      }
+      alert(`Searching for account to deposit: ${accountNo}`);
+      this.reset();
+    });
+
+    document.getElementById('createAccountForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const dob = document.getElementById('dob').value;
+      const phone = document.getElementById('phone').value;
+      const gender = document.getElementById('gender').value;
+      const email = document.getElementById('email').value;
+      const address = document.getElementById('address').value;
+      
+      if (!name || !dob || !phone || !gender || !email || !address) {
+        alert('Please fill in all fields.');
+        return;
+      }
+      
+      alert('Account created successfully!');
+      this.reset();
+      showPage('dashboard');
+    });
+
+    // Initialize with dashboard visible
+    showPage('dashboard');
   </script>
 </body>
 </html>
