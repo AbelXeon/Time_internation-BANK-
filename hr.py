@@ -202,6 +202,104 @@ def hire_employee():
         if conn:
             conn.close()
 
+
+
+# Add these new routes to your existing app.py
+
+@app.route('/api/current-user', methods=['GET'])
+def get_current_user():
+    conn = None
+    cursor = None
+    try:
+        # In a real app, you would get this from the session
+        # For now, we'll just return the first HR user
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT * FROM employee 
+            WHERE job_title = 'HR' 
+            LIMIT 1
+        """)
+        user = cursor.fetchone()
+        
+        if not user:
+            return jsonify({'success': False, 'error': 'No HR user found'}), 404
+            
+        return jsonify({
+            'success': True,
+            'user': {
+                'name': user['emp_name'],
+                'emp_id': user['emp_id'],
+                'role': user['job_title']
+            }
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@app.route('/api/department-stats', methods=['GET'])
+def get_department_stats():
+    conn = None
+    cursor = None
+    try:
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute("""
+            SELECT d.dep_name, COUNT(e.emp_id) as employee_count
+            FROM department d
+            LEFT JOIN employee e ON d.dep_id = e.dep_id
+            GROUP BY d.dep_name
+            ORDER BY d.dep_name
+        """)
+        stats = cursor.fetchall()
+        
+        return jsonify({
+            'success': True,
+            'stats': stats
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@app.route('/api/recent-actions', methods=['GET'])
+def get_recent_actions():
+    conn = None
+    cursor = None
+    try:
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute("""
+            SELECT * FROM employee_actions
+            ORDER BY action_date DESC
+            LIMIT 5
+        """)
+        actions = cursor.fetchall()
+        
+        return jsonify({
+            'success': True,
+            'actions': actions
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
+
+
 if __name__ == '__main__':
     if not os.path.exists('templates'):
         os.makedirs('templates')
