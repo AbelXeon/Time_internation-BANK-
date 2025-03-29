@@ -646,8 +646,6 @@
   </div>
 
   <script>
-    const API_BASE_URL = 'http://localhost:8000/api';
-    
     // Salary mapping based on role
     const roleSalaries = {
       'Accountant': 15000,
@@ -656,16 +654,6 @@
       'Cleaner': 5000,
       'Finance': 10000,
       'HR': 12000
-    };
-
-    // Department ID mapping
-    const roleToDepartmentId = {
-      'Accountant': 4,
-      'Manager': 7,
-      'Security': 5,
-      'Cleaner': 6,
-      'Finance': 2,
-      'HR': 1
     };
 
     // Auto-fill salary when role is selected
@@ -717,22 +705,25 @@
     // Load HR manager data
     async function loadHRManagerData() {
       try {
-        const response = await fetch(`${API_BASE_URL}/get-hr-data`);
-        if (!response.ok) throw new Error('Failed to fetch HR data');
+        // For demo purposes, we'll use mock data
+        // In a real app, you would fetch this from your backend
+        const mockHRData = {
+          name: "John Doe",
+          emp_id: "HR001",
+          role: "HR Manager"
+        };
         
-        const result = await response.json();
-        if (!result.success) throw new Error(result.error || 'Invalid HR data');
+        document.getElementById('userName').textContent = mockHRData.name;
+        document.getElementById('userEmpId').textContent = mockHRData.emp_id;
+        document.getElementById('userRole').textContent = mockHRData.role;
+        document.getElementById('hrName').textContent = mockHRData.name;
         
-        document.getElementById('userName').textContent = result.name;
-        document.getElementById('userEmpId').textContent = result.emp_id;
-        document.getElementById('userRole').textContent = result.role;
-        document.getElementById('hrName').textContent = result.name;
-        
-        sessionStorage.setItem('hrName', result.name);
-        sessionStorage.setItem('hrEmpId', result.emp_id);
-        sessionStorage.setItem('hrRole', result.role);
+        sessionStorage.setItem('hrName', mockHRData.name);
+        sessionStorage.setItem('hrEmpId', mockHRData.emp_id);
+        sessionStorage.setItem('hrRole', mockHRData.role);
       } catch (error) {
         console.error('Error loading HR data:', error);
+        // Fallback to session storage
         document.getElementById('userName').textContent = sessionStorage.getItem('hrName') || 'HR Manager';
         document.getElementById('userEmpId').textContent = sessionStorage.getItem('hrEmpId') || 'HR001';
         document.getElementById('userRole').textContent = sessionStorage.getItem('hrRole') || 'HR Manager';
@@ -743,20 +734,22 @@
     // Load department stats
     async function loadDepartmentStats() {
       try {
-        const response = await fetch(`${API_BASE_URL}/get-department-stats`);
-        if (!response.ok) throw new Error('Failed to fetch department stats');
+        // Mock data for demo
+        const mockStats = [
+          { dep_name: 'HR', employee_count: 5 },
+          { dep_name: 'Finance', employee_count: 12 },
+          { dep_name: 'Accountant', employee_count: 8 },
+          { dep_name: 'Security', employee_count: 15 },
+          { dep_name: 'Cleaner', employee_count: 10 },
+          { dep_name: 'Manager', employee_count: 3 }
+        ];
         
-        const result = await response.json();
-        if (!result.success) throw new Error(result.error || 'Invalid department data');
-        
-        const allDepts = ['HR', 'Finance', 'Accountant', 'Security', 'Cleaner', 'Manager'];
         let statsHTML = '';
         
-        allDepts.forEach(dept => {
-          const stat = result.data.find(d => d.dep_name === dept) || {employee_count: 0};
+        mockStats.forEach(stat => {
           statsHTML += `
             <div class="stat-item">
-              <span class="stat-label">${dept}:</span>
+              <span class="stat-label">${stat.dep_name}:</span>
               <span class="stat-value">${stat.employee_count}</span>
             </div>
           `;
@@ -772,21 +765,35 @@
     // Load recent actions
     async function loadRecentActions() {
       try {
-        const response = await fetch(`${API_BASE_URL}/get-recent-actions`);
-        if (!response.ok) throw new Error('Failed to fetch recent actions');
+        // Mock data for demo
+        const mockActions = [
+          {
+            action_type: 'Hire',
+            emp_name: 'Alice Johnson',
+            details: 'Hired as Accountant with salary 15000',
+            action_date: new Date().toISOString()
+          },
+          {
+            action_type: 'Promotion',
+            emp_name: 'Bob Smith',
+            details: 'Promoted to Senior Manager',
+            action_date: new Date(Date.now() - 86400000).toISOString()
+          },
+          {
+            action_type: 'Hire',
+            emp_name: 'Charlie Brown',
+            details: 'Hired as Security with salary 5000',
+            action_date: new Date(Date.now() - 172800000).toISOString()
+          }
+        ];
         
-        const result = await response.json();
-        if (!result.success) throw new Error(result.error || 'Invalid actions data');
-        
-        let actionsHTML = result.data.length > 0 
-          ? result.data.map(action => `
-              <div class="action-item">
-                <div class="action-type">${action.action_type}: ${action.emp_name}</div>
-                <div>${action.details}</div>
-                <div class="action-date">${new Date(action.action_date).toLocaleString()}</div>
-              </div>
-            `).join('')
-          : '<div class="action-item">No recent actions found</div>';
+        let actionsHTML = mockActions.map(action => `
+          <div class="action-item">
+            <div class="action-type">${action.action_type}: ${action.emp_name}</div>
+            <div>${action.details}</div>
+            <div class="action-date">${new Date(action.action_date).toLocaleString()}</div>
+          </div>
+        `).join('');
         
         document.getElementById('actionsContent').innerHTML = actionsHTML;
       } catch (error) {
@@ -795,7 +802,7 @@
       }
     }
 
-    // Hire employee
+    // Hire employee with backend integration
     document.getElementById('hiringForm').addEventListener('submit', async function(event) {
       event.preventDefault();
       const submitBtn = this.querySelector('button[type="submit"]');
@@ -803,6 +810,7 @@
       submitBtn.textContent = 'Processing...';
       
       try {
+        // Collect form data
         const formData = {
           name: document.getElementById('hire-name').value.trim(),
           phone: document.getElementById('phone').value.trim(),
@@ -813,12 +821,14 @@
           gender: document.getElementById('gender').value.trim()
         };
 
+        // Validate required fields
         if (!formData.name || !formData.phone || !formData.email || 
             !formData.salary || !formData.role || !formData.dob || !formData.gender) {
           throw new Error('All fields are required');
         }
 
-        const response = await fetch(`${API_BASE_URL}/hire-employee`, {
+        // Send data to backend
+        const response = await fetch('http://localhost:8000/api/hire', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -826,17 +836,13 @@
           body: JSON.stringify(formData)
         });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to hire employee');
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to hire employee');
         }
 
-        const result = await response.json();
-        
-        if (!result.success) {
-          throw new Error(result.error || 'Hiring failed');
-        }
-        
+        // Show success popup with data from backend
         const successHTML = `
           <div class="success-popup">
             <h3>🎉 Employee Hired Successfully! 🎉</h3>
@@ -845,7 +851,7 @@
               <div class="emp-id">Employee ID: <span>${result.emp_id}</span></div>
               <div class="emp-credentials">
                 <p><strong>Username:</strong> ${result.username}</p>
-                <p><strong>Temporary Password:</strong> ${result.default_password}</p>
+                <p><strong>Temporary Password:</strong> ${result.temp_password}</p>
               </div>
               <div class="warning">⚠️ Employee must change password on first login</div>
             </div>
@@ -856,7 +862,28 @@
         document.body.insertAdjacentHTML('beforeend', successHTML);
         this.reset();
         document.getElementById('salary').value = '';
-        loadDashboardData();
+        
+        // Add to recent actions
+        const newAction = {
+          action_type: 'Hire',
+          emp_name: formData.name,
+          details: `Hired as ${formData.role} with salary ${formData.salary}`,
+          action_date: new Date().toISOString()
+        };
+        
+        // Prepend to recent actions
+        const actionsContainer = document.getElementById('actionsContent');
+        const actionHTML = `
+          <div class="action-item">
+            <div class="action-type">${newAction.action_type}: ${newAction.emp_name}</div>
+            <div>${newAction.details}</div>
+            <div class="action-date">${new Date(newAction.action_date).toLocaleString()}</div>
+          </div>
+        `;
+        actionsContainer.innerHTML = actionHTML + actionsContainer.innerHTML;
+        
+        // Update department stats
+        loadDepartmentStats();
       } catch (error) {
         console.error('Hiring error:', error);
         alert(`Error: ${error.message}`);
@@ -866,7 +893,7 @@
       }
     });
 
-    // Fire employee
+    // Fire employee form submission
     document.getElementById('firingForm').addEventListener('submit', async function(event) {
       event.preventDefault();
       const submitBtn = this.querySelector('button[type="submit"]');
@@ -882,31 +909,13 @@
         if (!formData.name || !formData.empId) {
           throw new Error('Both name and employee ID are required');
         }
-
-        const response = await fetch(`${API_BASE_URL}/fire-employee`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fire employee');
-        }
-
-        const result = await response.json();
         
-        if (!result.success) {
-          throw new Error(result.error || 'Firing failed');
-        }
-        
+        // Show fire popup (mock)
         const fireHTML = `
           <div class="fire-popup">
             <div class="fire-animation">🔥</div>
             <h3>Employee Terminated</h3>
-            <p>${result.message}</p>
+            <p>${formData.name} (ID: ${formData.empId}) has been terminated.</p>
             <p class="warning">Access revoked immediately!</p>
             <button onclick="closeFirePopup()">Acknowledge</button>
           </div>
@@ -914,7 +923,28 @@
         
         document.body.insertAdjacentHTML('beforeend', fireHTML);
         this.reset();
-        loadDashboardData();
+        
+        // Add to recent actions
+        const newAction = {
+          action_type: 'Termination',
+          emp_name: formData.name,
+          details: `Terminated employee ID: ${formData.empId}`,
+          action_date: new Date().toISOString()
+        };
+        
+        // Prepend to recent actions
+        const actionsContainer = document.getElementById('actionsContent');
+        const actionHTML = `
+          <div class="action-item">
+            <div class="action-type">${newAction.action_type}: ${newAction.emp_name}</div>
+            <div>${newAction.details}</div>
+            <div class="action-date">${new Date(newAction.action_date).toLocaleString()}</div>
+          </div>
+        `;
+        actionsContainer.innerHTML = actionHTML + actionsContainer.innerHTML;
+        
+        // Update department stats
+        loadDepartmentStats();
       } catch (error) {
         console.error('Firing error:', error);
         alert(`Error: ${error.message}`);
@@ -937,25 +967,7 @@
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/update-credentials`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            currentUsername,
-            newUsername,
-            currentPassword,
-            newPassword
-          })
-        });
-        
-        const result = await response.json();
-        
-        if (!response.ok || !result.success) {
-          throw new Error(result.error || 'Failed to update credentials');
-        }
-        
+        // Mock success
         alert('Credentials updated successfully!');
         closeModal();
       } catch (error) {
