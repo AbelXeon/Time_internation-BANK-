@@ -871,24 +871,36 @@ async function loadRecentActions() {
       }
     });
 
-    // Fire employee form submission
     document.getElementById('firingForm').addEventListener('submit', async function(event) {
-      event.preventDefault();
-      const submitBtn = this.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Processing...';
-      
-      try {
+    event.preventDefault();
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Processing...';
+    
+    try {
         const formData = {
-          name: document.getElementById('fire-name').value.trim(),
-          empId: document.getElementById('empId').value.trim()
+            name: document.getElementById('fire-name').value.trim(),
+            empId: document.getElementById('empId').value.trim()
         };
 
         if (!formData.name || !formData.empId) {
-          throw new Error('Both name and employee ID are required');
+            throw new Error('Both name and employee ID are required');
         }
         
-        // Show fire popup (mock)
+        const response = await fetch('http://localhost:8000/api/fire', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to terminate employee');
+        }
+
         const fireHTML = `
           <div class="fire-popup">
             <div class="fire-animation">🔥</div>
@@ -902,57 +914,56 @@ async function loadRecentActions() {
         document.body.insertAdjacentHTML('beforeend', fireHTML);
         this.reset();
         
-        // Add to recent actions
-        const newAction = {
-          action_type: 'Termination',
-          emp_name: formData.name,
-          details: `Terminated employee ID: ${formData.empId}`,
-          action_date: new Date().toISOString()
-        };
-        
-        // Prepend to recent actions
-        const actionsContainer = document.getElementById('actionsContent');
-        const actionHTML = `
-          <div class="action-item">
-            <div class="action-type">${newAction.action_type}: ${newAction.emp_name}</div>
-            <div>${newAction.details}</div>
-            <div class="action-date">${new Date(newAction.action_date).toLocaleString()}</div>
-          </div>
-        `;
-        actionsContainer.innerHTML = actionHTML + actionsContainer.innerHTML;
-        
-        // Update department stats
+        // Refresh recent actions
+        loadRecentActions();
         loadDepartmentStats();
-      } catch (error) {
+    } catch (error) {
         console.error('Firing error:', error);
         alert(`Error: ${error.message}`);
-      } finally {
+    } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Terminate Employee';
-      }
-    });
+    }
+});
 
-    // Update credentials
     async function updateCredentials() {
-      const currentUsername = document.getElementById('currentUsername').value;
-      const newUsername = document.getElementById('newUsername').value;
-      const currentPassword = document.getElementById('currentPassword').value;
-      const newPassword = document.getElementById('newPassword').value;
+    const currentUsername = document.getElementById('currentUsername').value;
+    const newUsername = document.getElementById('newUsername').value;
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
 
-      if (!currentUsername || !newUsername || !currentPassword || !newPassword) {
+    if (!currentUsername || !newUsername || !currentPassword || !newPassword) {
         alert('Please fill in all fields');
         return;
-      }
+    }
 
-      try {
-        // Mock success
+    try {
+        const response = await fetch('http://localhost:8000/api/update-credentials', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                currentUsername,
+                newUsername,
+                currentPassword,
+                newPassword
+            })
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to update credentials');
+        }
+
         alert('Credentials updated successfully!');
         closeModal();
-      } catch (error) {
+    } catch (error) {
         console.error('Error updating credentials:', error);
         alert(`Error: ${error.message}`);
-      }
     }
+}
 
     // Close popup functions
     function closeSuccessPopup() {
